@@ -8,7 +8,7 @@ d2=90;
 d12=120; 
 d_0=10; 
 d = [d12 d2 d1 d_0];
-T_max = 1000000; %h
+T_max = 10000;
 state_init = 1; %Possible values, 1, 2, 3, 4.
 h=0.001;
 
@@ -90,6 +90,72 @@ end
 
 prod = d * Pimatrix;
 
+%% Discretization-approach simulation
+N=10000000;
+h=0.001;
+t_max = h*N;
+prod2 = [];
 
+for i=1:length(muvec_1)
+    mu_1 = muvec_1(i);
+    mu_2 = muvec_2(i);
+    
+    q00 = -lambda_1 - lambda_2 - (lambda_1 + lambda_2);
+    q01 = lambda_1;
+    q02 = lambda_2;
+    q03 = (lambda_1 + lambda_2);
 
+    q10 = mu_1;
+    q11 = -mu_1 - lambda_2 - (mu_1 + lambda_2);
+    q12 = (mu_1 + lambda_2);
+    q13 = lambda_2;
+
+    q20 = mu_2;
+    q21 = (mu_2 + lambda_1);
+    q22 = -mu_2 -lambda_1 - (mu_2 + lambda_1); 
+    q23 = 1/lambda_1;
+
+    q30 = (mu_1 + mu_2);
+    q31 = mu_2;
+    q32 = mu_1;
+    q33 = -mu_1 - mu_2 - (mu_1 + mu_2);
+
+    Q = [q00 q01 q02 q03;
+         q10 q11 q12 q13;
+         q20 q21 q22 q23;
+         q30 q31 q32 q33];
+
+    I = eye(4);
+    P = I + Q*h;
+
+    %sample initial state
+    vec = [1,2,3,4];
+    state = datasample(vec,1);
+    state_count = [0 0 0 0];
+    tic
+    t=0;
+    
+    while t < t_max
+        X = rand();
+        %compare random sample to probabilities p_{ij}
+        state = vec(state);
+        prob_vec = [];
+        for i=1:4
+            prob_vec(i) = sum(P(state,vec(1:i)));
+        end
+
+        stats = find(prob_vec > X);
+        i = stats(1);
+
+        state_count(i) = state_count(i) + 1;
+        state_count = state_count/sum(state_count);
+        prodcon = sum(d.*state_count);
+
+        t=t+h;
+    end
+
+    prod2(i) = prodcon;
+end
+
+prod = d * P;
 
