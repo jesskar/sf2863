@@ -1,0 +1,34 @@
+6: 
+
+Assume that we start in State i,
+we know that all states communicate with each other: for k=1,..,4 p_ik is not zero
+for each element in row i of the matrix Q, extract the elements and use as averages when sampling form exp.
+This yields for random variables, corresponding to rates of transition from state i to state k
+
+Choose to jump to state k which fulfills min(X_k). 
+
+Repeat until convergence according to (7).
+
+Also, record the total time of the iterations, as well as the total number of visits in each state. 
+
+
+---------
+
+6: 
+Assume that we start in State i
+we know that all states communicate with each other: for k=1,..,4 p_ik is not zero
+for each element (not i) in row i of the matrix Q, extract the elements and use as averages when sampling from exp.
+This yields three random variables, corresponding to time to transition from state i to state k
+
+Choose to jump to state k which fulfills min(X_k). 
+
+initial = i
+vec = [1,2,3,4];
+
+while t < T_max
+	vec(i) = []
+	X_1 = exprnd(Q(i,vec(1)))
+	X_2 = exprnd(Q(i,vec(2)))
+	X_3 = exprnd(Q(i,vec(4)))
+	X = min(X_1,X_2,X_3)
+	vec = [1,2,3,4]
