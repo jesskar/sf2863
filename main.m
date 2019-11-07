@@ -1,5 +1,5 @@
-% Vi beräknar intensitetsmatrisen Q för att vi är i continuous time som vi
-% sedan göra om till P (Markov transition matrix).
+%We compute the intensity matrix Q (continuous time)
+%Then translate it using P=exp(Qt) t
 
 % Parameters
 rng(1)
@@ -9,7 +9,7 @@ d12=120;
 d_0=10; 
 d = [d12 d2 d1 d_0];
 T_max = 1000000; %h
-state_init = 1; %Possible values, 1, 2, 3 & 4.
+state_init = 1; %Possible values, 1, 2, 3, 4.
 h=0.001;
 
 mu_A=0.70; 
