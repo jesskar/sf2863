@@ -32,14 +32,14 @@ for i=1:length(muvec_1)
     mu_2 = muvec_2(i);
     
     %choose ONE of below
-    Q = bestQmatrix(mu_AB, mu_C);
-    %Q = getQmatrix(mu_1,mu_2);
+    %Q = bestQmatrix(mu_AB, mu_C);
+    Q = getQmatrix(mu_1,mu_2);
     
     P = expm(Q);
 
     [V,D] = eig(P');
     Pi = V(:,1)';
-    Pi = Pi./sum(Pi);
+    Pi = Pi/sum(Pi);
     Pi_matrix(:,i) = Pi'; 
 end
 
@@ -47,7 +47,7 @@ production_1 = d * Pi_matrix;
 
 %% Continuous time simulation
 % converges with 1% for T = 10000 vs. T = 50000
-T_max = 50000;
+T_max = 10000;
 time_matrix = [];
 for i=1:length(muvec_1)
     mu_1 = muvec_1(i);
@@ -57,7 +57,7 @@ for i=1:length(muvec_1)
     vec = [1,2,3,4];
     
     %choose ONE of below
-    Q = bestQmatrix(mu_AB, mu_C);
+    %Q = bestQmatrix(mu_AB, mu_C);
     Q = getQmatrix(mu_1,mu_2);
 
     t = 0;
@@ -86,15 +86,17 @@ end
 production_2 = d * time_matrix;
 
 %% Discretization-approach simulation
-N=100000;
+N=10000;
 h=0.001;
 t_max = h*N;
-prod2 = [];
 
+state_matrix = [];
 for i=1:length(muvec_1)
     mu_1 = muvec_1(i);
     mu_2 = muvec_2(i);
     
+    %choose ONE of below
+    %Q = bestQmatrix(mu_AB, mu_C);
     Q = getQmatrix(mu_1,mu_2);
 
     I = eye(4);
@@ -112,6 +114,7 @@ for i=1:length(muvec_1)
         %compare random sample to probabilities p_{ij}
         state = vec(state);
         prob_vec = [];
+        
         for i=1:4
             prob_vec(i) = sum(P(state,vec(1:i)));
         end
@@ -120,14 +123,13 @@ for i=1:length(muvec_1)
         i = stats(1);
 
         state_count(i) = state_count(i) + 1;
-        %state_count = state_count/sum(state_count);
-        prodcon = sum(d.*state_count);
-
+        
         t=t+h;
     end
-
-    prod2(i) = prodcon;
+    
+    state_matrix(:,i) = (state_count/sum(state_count))';
+    
 end
 
-prod = d * P;
+production_3 = d * state_matrix;
 
