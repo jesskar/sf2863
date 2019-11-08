@@ -46,8 +46,8 @@ end
 production_1 = d * Pi_matrix;
 
 %% Continuous time simulation
-
-T_max = 1000;
+% converges with 1% for T = 10000 vs. T = 50000
+T_max = 50000;
 time_matrix = [];
 for i=1:length(muvec_1)
     mu_1 = muvec_1(i);
