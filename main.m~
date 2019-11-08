@@ -67,7 +67,7 @@ production_1 = d * Pi_matrix;
 
 %% Continuous time simulation
 
-T_max = 50000;
+T_max = 10000;
 time_matrix = [];
 for i=1:length(muvec_1)
     mu_1 = muvec_1(i);
