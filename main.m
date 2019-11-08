@@ -1,7 +1,7 @@
 %We compute the intensity matrix Q (continuous time)
 %Then translate it using P=exp(Qt) 
 
-clear all; clear workspace
+%clear all; clear workspace
 % Parameters
 global lambda_1 lambda_2
 rng(1)
@@ -86,7 +86,7 @@ end
 production_2 = d * time_matrix;
 
 %% Discretization-approach simulation
-N=10000;
+N=10000000;
 h=0.001;
 t_max = h*N;
 
@@ -100,8 +100,8 @@ for i=1:length(muvec_1)
     Q = getQmatrix(mu_1,mu_2);
 
     I = eye(4);
-    P = I + Q*h;
-
+    P = I + Q*h + (Q*h).^2/2
+    P = expm(Q);
     %sample initial state
     vec = [1,2,3,4];
     state = datasample(vec,1);
@@ -115,21 +115,21 @@ for i=1:length(muvec_1)
         state = vec(state);
         prob_vec = [];
         
-        for i=1:4
-            prob_vec(i) = sum(P(state,vec(1:i)));
+        for k=1:4
+            prob_vec(k) = sum(P(state,vec(1:k)));
         end
 
         stats = find(prob_vec > X);
-        i = stats(1);
+        j = stats(1);
 
-        state_count(i) = state_count(i) + 1;
+        state_count(j) = state_count(j) + 1;
         
         t=t+h;
     end
     
     state_matrix(:,i) = (state_count/sum(state_count))';
-    
+
 end
 
-production_3 = d * state_matrix;
+production_3A = d * state_matrix;
 
