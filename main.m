@@ -31,7 +31,9 @@ for i=1:length(muvec_1)
     mu_1 = muvec_1(i);
     mu_2 = muvec_2(i);
     
-    Q = getQmatrix(mu_1,mu_2);
+    %choose ONE of below
+    Q = bestQmatrix(mu_AB, mu_C);
+    %Q = getQmatrix(mu_1,mu_2);
     
     P = expm(Q);
 
@@ -54,6 +56,8 @@ for i=1:length(muvec_1)
     state_time = [0 0 0 0];
     vec = [1,2,3,4];
     
+    %choose ONE of below
+    Q = bestQmatrix(mu_AB, mu_C);
     Q = getQmatrix(mu_1,mu_2);
 
     t = 0;
@@ -80,6 +84,7 @@ for i=1:length(muvec_1)
 end
    
 production_2 = d * time_matrix;
+
 %% Discretization-approach simulation
 N=100000;
 h=0.001;
