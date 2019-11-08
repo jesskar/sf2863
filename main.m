@@ -32,7 +32,7 @@ for i=1:length(muvec_1)
     mu_2 = muvec_2(i);
     
     Q = getQmatrix(mu_1,mu_2);
-
+    
     P = expm(Q);
 
     [V,D] = eig(P');
@@ -90,30 +90,7 @@ for i=1:length(muvec_1)
     mu_1 = muvec_1(i);
     mu_2 = muvec_2(i);
     
-    q00 = -lambda_1 - lambda_2 - (lambda_1 + lambda_2);
-    q01 = lambda_1;
-    q02 = lambda_2;
-    q03 = (lambda_1 + lambda_2);
-
-    q10 = mu_1;
-    q11 = -mu_1 - lambda_2 - (mu_1 + lambda_2);
-    q12 = (mu_1 + lambda_2);
-    q13 = lambda_2;
-
-    q20 = mu_2;
-    q21 = (mu_2 + lambda_1);
-    q22 = -mu_2 -lambda_1 - (mu_2 + lambda_1); 
-    q23 = 1/lambda_1;
-
-    q30 = (mu_1 + mu_2);
-    q31 = mu_2;
-    q32 = mu_1;
-    q33 = -mu_1 - mu_2 - (mu_1 + mu_2);
-
-    Q = [q00 q01 q02 q03;
-         q10 q11 q12 q13;
-         q20 q21 q22 q23;
-         q30 q31 q32 q33];
+    Q = getQmatrix(mu_1,mu_2);
 
     I = eye(4);
     P = I + Q*h;
