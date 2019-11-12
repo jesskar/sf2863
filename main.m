@@ -34,18 +34,23 @@ for i=1:length(muvec_1)
     mu_2 = muvec_2(i);
     
     %choose ONE of below
-    %Q = bestQmatrix(mu_AB, mu_C);
-    Q = getQmatrix(mu_1,mu_2);
+    Q = bestQmatrix(mu_AB, mu_C);
+    %Q = getQmatrix(mu_1,mu_2);
     
     P = expm(Q);
     [V,D] = eig(P');
     Pi = V(:,1)';
     Pi = Pi/sum(Pi);
-    Pi_matrix_Jessika(:,i) = Pi'; 
+    Pi_matrix(:,i) = Pi'; 
     
 end
 
 production_1 = d * Pi_matrix;
+
+% Save data
+format long g
+Analytic = [Pi_matrix' production_1']
+Analytic = round(Analytic,2)
 
 %% Continuous time simulation inc. workers break
 
@@ -60,8 +65,8 @@ for i=1:length(muvec_1)
     mu_2 = muvec_2(i);
    
     %choose ONE of below
-    %Q = bestQmatrix(mu_AB, mu_C);
-    Q = getQmatrix(mu_1,mu_2);
+    Q = bestQmatrix(mu_AB, mu_C);
+    %Q = getQmatrix(mu_1,mu_2);
     
     t = 0; 
     state = datasample(vec,1);
@@ -100,20 +105,20 @@ for i=1:length(muvec_1)
                 
             end
             
-        end   
-                
-        % Frequentist calc of prob longer than x    
-        if next == 1
+            % Frequentist calc of prob longer than x
+            if state == 1
             
-            both_working_visits = both_working_visits + 1;
-            
-            if T_i > x
-                
-                longer_than_x = longer_than_x + 1;
+                both_working_visits = both_working_visits + 1;
+
+                if T_i > x
+
+                    longer_than_x = longer_than_x + 1;
+
+                end
             
             end
             
-        end
+        end   
         
         % Update state
         state_time(state) = state_time(state) + T_min;
@@ -132,7 +137,7 @@ end
 production_2 = d * time_matrix;
 %% Discretization-approach simulation
 
-N=10000000;
+N=1000000;
 h=0.001;
 t_max = h*N;
 
@@ -175,4 +180,3 @@ for i=1:length(muvec_1)
 end
 
 production_3 = d * state_matrix;
-
